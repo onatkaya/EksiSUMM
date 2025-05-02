@@ -44,7 +44,7 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 
 - **Users can customize:**
 
-  - Summary Length: Short (128 tokens), Normal (256 tokens), or Long (512 tokens)
+  - Summary Length: `short` (128 tokens), `normal` (256 tokens), or `long` (512 tokens)
 
   - Summary Language: Turkish or English
 
@@ -52,7 +52,7 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 
 ### Tech Stack 📚
 
-* Python (version==3.10.0) 
+* Python (`version==3.10.0`) 
 * BeautifulSoup (for custom scraper building)
 * Transformers (Hugging Face)
 * Hugging Face Spaces
