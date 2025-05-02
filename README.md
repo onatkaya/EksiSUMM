@@ -76,7 +76,7 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 
 ## Contact
 
-For questions and inquiries, you could contact via my [e-mail](mronatkaya@gmail.com) or [LinkedIn](https://www.linkedin.com/in/onat-kaya2/)
+For questions and inquiries, you could contact via my `mronatkaya@gmail.com` or [LinkedIn](https://www.linkedin.com/in/onat-kaya2/)
 
 
 ## License
