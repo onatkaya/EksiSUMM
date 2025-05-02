@@ -2,7 +2,11 @@
 ### Try it at [Hugging Face Spaces 🤗](https://huggingface.co/spaces/mronatkaya/eksiSUMM)!
 
 ## Description 🧠
-Don't have time for reading all the entries in [Eksi Sozluk](http://eksisozluk.com/)? Then, you are at the right place!
+**Don't have time for reading all the entries in [Eksi Sozluk](http://eksisozluk.com/)? Then, you are at the right place!**
+
+Ekşi Sözlük is one of Turkey’s most popular online forums, where users can create topic-specific _titles_ and contribute via posts called _entries_. These titles can contain multiple pages of content (dozens, even hundreds of pages sometimes), making it time-consuming to read through.
+
+This project is a smart **summarization** and **sentiment analysis** tool to make the reading experience smoother, using modern language models.
 
 ## Installation 🔧
 
@@ -43,8 +47,8 @@ TBD.
 
 ## Limitations & Disclaimer ⚠️
 
+* The sentiment analysis model might not perform well on very large input sizes. For this, only the most recent 200 entries are used when analyzing sentiment on Eksi Sozluk titles with 200+ entries.
 * The application EksiSUMM and its creator _(yours truly)_ is not responsible for the factual accuracy of the summary provided. This application mainly focuses on summarizing the (mostly subjective) entries written by users online.
-* another point.
 
 ## License
 This project is licensed under the MIT License.
