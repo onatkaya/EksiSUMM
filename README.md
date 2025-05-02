@@ -41,9 +41,10 @@ TBD.
 -  🎯 Improve flexibility on input URL provided.
 -  🎯 Bigger and better and stronger LLMs?
 
-## Disclaimer ⚠️
+## Limitations & Disclaimer ⚠️
 
-The application EksiSUMM and its creator _(yours truly)_ is not responsible for the factual accuracy of the summary provided. This application mainly focuses on summarizing the (mostly subjective) entries written by users online.
+* The application EksiSUMM and its creator _(yours truly)_ is not responsible for the factual accuracy of the summary provided. This application mainly focuses on summarizing the (mostly subjective) entries written by users online.
+* another point.
 
 ## License
 This project is licensed under the MIT License.
