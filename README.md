@@ -43,7 +43,7 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 
 - A custom-built scraper (using BeautifulSoup) collects all entries from every available page under that topic — whether it contains 1 page or 100.
 
-- The collected entries are then passed to OpenAI’s GPT-4o-mini for summarization. A carefully designed prompt ensures the summaries are informative and concise.
+- The collected entries are then passed to OpenAI’s [GPT-4o mini](https://platform.openai.com/docs/models/gpt-4o-mini) for summarization. A carefully designed prompt ensures the summaries are informative and concise.
 
 - **Users can customize:**
 
