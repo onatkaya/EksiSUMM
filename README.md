@@ -28,15 +28,22 @@ To use the application, just run:
 ```bash
 python app.py
 ```
-Afterwards, you should be directed to a localhost address, where you can play with EksiSUMM.
+Afterwards, you should be directed to a `localhost` address, where you can play with EksiSUMM.
 
 ## How It Works? ⚙️
 
 TBD.
 
-## Tech Stack
+### Tech Stack 📚
 
-TBD.
+* Python (version==3.10.0) 
+* BeautifulSoup (for custom scraper building)
+* Transformers (Hugging Face)
+* Hugging Face Spaces
+* OpenAI API (GPT-4o-mini)
+* Gradio
+* Matplotlib 
+* `os` module
 
 ## To-Do List 🎯
 
