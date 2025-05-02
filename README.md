@@ -6,7 +6,7 @@
 
 Ekşi Sözlük is one of Turkey’s most popular online forums, where users can create topic-specific _titles_ and contribute via posts called _entries_. These titles can contain multiple pages of content (dozens, even hundreds of pages sometimes), making it time-consuming to read through.
 
-This project is a smart **summarization** and **sentiment analysis** tool to make the reading experience smoother, using modern language models.
+This project is consisted of a smart **summarization** and **sentiment analysis** tool to make the reading experience smoother, using modern language models.
 
 ## Installation 🔧
 
