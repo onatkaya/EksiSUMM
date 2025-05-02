@@ -3,7 +3,6 @@
 ## Description 🧠
 Don't have time for reading all the entries in [Eksi Sozluk](http://eksisozluk.com/)? Then, you are at the right place!
 
-
 ## Installation 🔧
 
 ```bash
@@ -19,8 +18,17 @@ pip install -r requirements.txt
 ## Usage 🔎
 
 
+
+## How It Works? ⚙️
+
+TBD.
+
 ## To-Do List 🎯
 
+- ✅ task1
+- ✅ task2
+-  ❌ task3
+-  ❌ task4
 
 ## Disclaimer ⚠️
 
