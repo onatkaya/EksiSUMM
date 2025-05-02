@@ -14,8 +14,8 @@ conda activate eksi-vent
 pip install -r requirements.txt
 ```
 
-
 ## Usage 🔎
+
 
 
 
@@ -25,12 +25,14 @@ TBD.
 
 ## To-Do List 🎯
 
-- ✅ task1
-- ✅ task2
--  ❌ task3
--  ❌ task4
+- ✅ Push the application on Hugging Face Spaces 🤗
+- ✅ Publish the repo on GitHub.
+-  🎯 Improve flexibility on input URL provided.
+-  🎯 
 
 ## Disclaimer ⚠️
+
+The application EksiSUMM and its creator _(yours truly)_ is not responsible for the factual accuracy of the summary provided. This application mainly focuses on summarizing the (mostly subjective) entries written by users online.
 
 ## License
 This project is licensed under the MIT License.
