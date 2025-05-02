@@ -30,12 +30,16 @@ Afterwards, you should be directed to a localhost address, where you can play wi
 
 TBD.
 
+## Tech Stack
+
+TBD.
+
 ## To-Do List 🎯
 
 - ✅ Push the application on Hugging Face Spaces 🤗
 - ✅ Publish the repo on GitHub.
 -  🎯 Improve flexibility on input URL provided.
--  🎯 
+-  🎯 Bigger and better and stronger LLMs?
 
 ## Disclaimer ⚠️
 
