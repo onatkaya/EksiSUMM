@@ -32,7 +32,21 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 
 ## How It Works? ⚙️
 
-TBD.
+- The user provides a URL pointing to a specific topic on Ekşi Sözlük.
+  - The URL must be in the specific format: https://eksisozluk.com/title-name-here--title_id
+  - Example: [https://eksisozluk.com/seoul-national-university--4258420](https://eksisozluk.com/seoul-national-university--4258420)
+
+- A custom-built scraper (using BeautifulSoup) collects all entries from every available page under that topic — whether it contains 1 page or 100.
+
+- The collected entries are then passed to OpenAI’s GPT-4o-mini for summarization. A carefully designed prompt ensures the summaries are informative and concise.
+
+- **Users can customize:**
+
+  - Summary Length: Short (128 tokens), Normal (256 tokens), or Long (512 tokens)
+
+  - Summary Language: Turkish or English
+
+- **Optional:** Users can enable **sentiment analysis**, powered by a fine-tuned BERT model called [TurkishBERTweet](https://huggingface.co/VRLLab/TurkishBERTweet). It works by classifying each entry as `positive`, `neutral` or `negative`. The results are displayed both numerically and visually (pie chart).
 
 ### Tech Stack 📚
 
@@ -44,6 +58,9 @@ TBD.
 * Gradio
 * Matplotlib 
 * `os` module
+  
+### Workflow (Visual)
+TBD.
 
 ## To-Do List 🎯
 
@@ -51,6 +68,7 @@ TBD.
 - ✅ Publish the repo on GitHub.
 -  🎯 Improve flexibility on input URL provided.
 -  🎯 Bigger and better and stronger LLMs?
+-  🎯 Solve the issue with sentiment analysis BERT-classifier. another model? processing entries by batches?
 
 ## Limitations & Disclaimer ⚠️
 
