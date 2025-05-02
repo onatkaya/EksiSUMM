@@ -74,5 +74,10 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 * The sentiment analysis model might not perform well on very large input sizes. For this, only the most recent 200 entries are used when analyzing sentiment on Eksi Sozluk titles with 200+ entries.
 * The application EksiSUMM and its creator _(yours truly)_ is not responsible for the factual accuracy of the summary provided. This application mainly focuses on summarizing the (mostly subjective) entries written by users online.
 
+## Contact
+
+For questions and inquiries, you could contact via my [e-mail](mronatkaya@gmail.com) or [LinkedIn](https://www.linkedin.com/in/onat-kaya2/)
+
+
 ## License
 This project is licensed under the MIT License.
