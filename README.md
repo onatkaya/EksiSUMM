@@ -38,7 +38,7 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 - The user provides a URL pointing to a specific topic on Ekşi Sözlük.
   - The URL must be in the specific format: https://eksisozluk.com/title-name-here--title_id
   - It should not have any text elsewhere (_e.g._ after the URL of the title specified).
-  - Example: [https://eksisozluk.com/seoul-national-university--4258420](https://eksisozluk.com/seoul-national-university--4258420)
+  - <span style="color:green">Example</span>: [https://eksisozluk.com/seoul-national-university--4258420](https://eksisozluk.com/seoul-national-university--4258420)
   - Example: [https://eksisozluk.com/osaka--227690](https://eksisozluk.com/osaka--227690)
 
 - A custom-built scraper (using BeautifulSoup) collects all entries from every available page under that topic — whether it contains 1 page or 100.
