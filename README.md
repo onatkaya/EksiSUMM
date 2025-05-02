@@ -14,9 +14,12 @@ This project is a smart **summarization** and **sentiment analysis** tool to mak
 git clone https://github.com/onatkaya/EksiSUMM.git
 
 cd EksiSUMM
+
+# create virtual environment
 conda create -n eksi-venv python=3.10.0
 conda activate eksi-venv
 
+# install dependencies
 pip install -r requirements.txt
 ```
 
