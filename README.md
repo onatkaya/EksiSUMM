@@ -1,4 +1,5 @@
 # EksiSUMM 💧
+Try it at [Hugging Face Spaces 🤗](https://huggingface.co/spaces/mronatkaya/eksiSUMM)!
 
 ## Description 🧠
 Don't have time for reading all the entries in [Eksi Sozluk](http://eksisozluk.com/)? Then, you are at the right place!
