@@ -81,6 +81,19 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 
 For questions and inquiries, you could contact via my email `mronatkaya@gmail.com` or [LinkedIn](https://www.linkedin.com/in/onat-kaya2/)
 
+## Credits
+
+If you use this code for your work, please cite this GitHub repository.
+
+```
+@software{onatkaya_EksiSUMM,
+  author       = {onatkaya},
+  title        = {onatkaya/EksiSUMM},
+  month        = may,
+  year         = 2025,
+  url          = {https://github.com/onatkaya/EksiSUMM}
+}
+```
 
 ## License
 This project is licensed under the MIT License.
