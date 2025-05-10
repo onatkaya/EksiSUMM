@@ -13,6 +13,7 @@ This project is consisted of a smart **summarization** and **sentiment analysis*
 ```bash
 git clone https://github.com/onatkaya/EksiSUMM.git
 
+mkdir EksiSUMM
 cd EksiSUMM
 
 # create virtual environment
