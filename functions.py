@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 import re
-from openai import OpenAI
+import ollama
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModel
 from collections import Counter
@@ -10,10 +10,13 @@ import matplotlib.pyplot as plt
 import io
 from PIL import Image
 import os
+from typing import List, Optional, Tuple
 
-api_key = os.environ.get("OPENAI_KEY")
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5:3b")
+OLLAMA_NUM_CTX = int(os.environ.get("OLLAMA_NUM_CTX", "16384"))
 
-def check_multi_page(url_main):
+
+def check_multi_page(url_main: str) -> Tuple[bool, int]:
     """
     Checks whether the page of the title is multi-paged (contains a page counter),
     or single-paged (does not contain a page counter). Returns a boolean, TRUE for multi-paged situations.
@@ -41,7 +44,7 @@ def check_multi_page(url_main):
         print("This title only contains 1 page.")
         return False, 1 # it is single-paged.
 
-def single_page_scrape(url):
+def single_page_scrape(url: str) -> List[str]:
     """
     Scraping all the entries from a single URL page.
 
@@ -55,7 +58,7 @@ def single_page_scrape(url):
     entry_list = [a.text.strip() for a in entries] # going through each entry (processing). cleaning it by using .text attribute.
     return entry_list
 
-def get_page_title(url):
+def get_page_title(url: str) -> str:
     """
     In EksiSozluk, there is a title for the pages.
 
@@ -68,7 +71,7 @@ def get_page_title(url):
     title = soup.find('span', itemprop='name').text # have all entries in an iterable (raw, needs further processing)
     return str(title)
 
-def all_pages_scrape(url_main):
+def all_pages_scrape(url_main: str) -> List[str]:
     """
     Scraping all the entries from all pages.
 
@@ -88,19 +91,36 @@ def all_pages_scrape(url_main):
     print("Scraping EksiSozluk entries is completed!")
     return all_entries
 
-# Using OpenAI API, for summarization
-def get_completion(prompt, tokens_create, model="gpt-4o-mini"):
-    client = OpenAI(api_key=api_key)
-    messages = [{"role": "user", "content": prompt}]
-    response = client.responses.create(
-        model=model,
-        input=messages,
-        temperature=0.1, # this is the degree of randomness of the model's output
-        max_output_tokens=tokens_create
-    )
-    return(response.output_text)
+# Using a local Ollama model, for summarization
+def get_completion(prompt: str, tokens_create: int, model: str = OLLAMA_MODEL) -> str:
+    """
+    Sends a prompt to a local Ollama model and retrieves the generated completion.
 
-def create_pie_chart(positives, neutrals, negatives):
+    RETURN: The model's output text, as a str.
+    """
+
+
+    messages = [{"role": "user", "content": prompt}]
+    print(messages)
+
+    response = ollama.chat(
+        model=model,
+        messages=messages,
+        options={
+            "temperature": 0.1, # this is the degree of randomness of the model's output
+            "num_predict": tokens_create,
+            "num_ctx": OLLAMA_NUM_CTX # prompt + output must fit within this, or Ollama silently truncates
+        }
+    )
+    print(response)
+    return response["message"]["content"]
+
+def create_pie_chart(positives: int, neutrals: int, negatives: int) -> Image.Image:
+    """
+    Builds a pie chart visualizing the counts of positive, neutral, and negative posts.
+
+    RETURN: A PIL Image containing the rendered pie chart.
+    """
     labels = ['positive', 'neutral', 'negative']
     sizes = [positives, neutrals, negatives]
     colors = ['lightgreen', 'skyblue', 'salmon']
@@ -121,7 +141,14 @@ def create_pie_chart(positives, neutrals, negatives):
     return image
 
 # https://huggingface.co/VRLLab/TurkishBERTweet
-def sentiment_analysis(entries_list):
+def sentiment_analysis(entries_list: List[str]) -> Tuple[str, Image.Image]:
+    """
+    Runs sentiment analysis on a list of posts using the TurkishBERTweet
+    sentiment classifier, then tallies the results into a pie chart.
+
+    RETURN: A tuple containing a summary string of the sentiment counts
+    and a PIL Image of the corresponding pie chart.
+    """
     print("Conducting Sentiment Analysis on Posts...")
     peft_model = "VRLLab/TurkishBERTweet-Lora-SA"
     peft_config = PeftConfig.from_pretrained(peft_model)
@@ -147,33 +174,58 @@ def sentiment_analysis(entries_list):
     image = create_pie_chart(counter_list['positive'], counter_list['neutral'], counter_list['negative'])
     return result, image
 
-def getSummary(url_main, tokens_create, sentiment, lang="English"):
+def getSummary(url_main: str, tokens_create: int, sentiment: bool, lang: str = "English") -> Tuple[str, str, Optional[Image.Image]]:
+    """
+    Scrapes all entries for a EksiSozluk title and generates an AI summary,
+    optionally including sentiment analysis over the scraped posts.
+
+    RETURN: A tuple of (summary string, sentiment result string or "--" if
+    sentiment analysis was skipped, pie chart Image or None if skipped).
+    """
     url_title = get_page_title(url_main)
     print(f"Title is extracted: {url_title}")
     print(f"Starting to scrape EksiSozluk entries for the title '{url_title}'...")
     entries_list = all_pages_scrape(url_main)
     
     print(f"Generating the summary...\n")
-    prompt =  f"""
+    prompt_old =  f"""
     You are going to be a presented a list of strings below. Each string in the list is in Turkish. \
     These strings are scraped from a Turkish forum that resembles Reddit, called Ekşi Sözlük. \
     Each string in the list represents a post, under a specified title. The list of strings will be specified under single quotations. \
     The title representing the topic of the posts will also be given below as well (under single quotations). \
     Summarize what is being said in these posts overall, for someone who does not know anything neither about the posts nor the title. \
-    Write the summary in {lang}. Use bullet points for better clarity. Please do not have incomplete sentence(s) in the output.
+    Write the summary in {lang}. Use bullet points for better clarity. Do not have incomplete sentence(s) in the output! Do not repeat yourself!
     
     Title: '{url_title}'   
     
     List of strings (posts): '{entries_list}'
     
     """
+
+    prompt =  f"""
+    Aşağıda bir dizi metin sunulacak. Listedeki her bir metin Türkçe olup, Türkçe bir forum olan Ekşi Sözlük'ten alınmıştır. \
+    Listedeki her bir metin, belirli bir başlık altında yapılmış bir paylaşımı temsil etmektedir.
+    Metin listesi tek tırnak işaretleri arasında verilecektir. \
+    Paylaşımların konusunu belirten başlık da yine aşağıda (tek tırnak işaretleri içinde) sunulacaktır. \
+    Ne paylaşımlar ne de başlık hakkında hiçbir bilgisi olmayan birine yönelik olarak, bu paylaşımlarda genel hatlarıyla nelerden bahsedildiğini özetleyin. \
+    Özet Türkçe dilinde olsun. \
+    Daha anlaşılır olması için madde işaretleri kullan.\
+    Çıktıda eksik cümlelere yer vermeyin! Kendini tekrar etme!
+
+    Ekşi Sözlük Başlığı: '{url_title}'   
+    
+    Metin dizisi (Ekşi sözlük gönderileri): '{entries_list}'
+    
+    """
+
+
     if(sentiment==False):
         response = get_completion(prompt=prompt, tokens_create=tokens_create)
-        response2 = f"Total number of entries considered: {len(entries_list)}\n" + response 
+        response2 = f"Başlık Altındaki Toplam Entry Sayısı: {len(entries_list)}\n" + response 
         return response2, "--", None
     else:
         response = get_completion(prompt=prompt, tokens_create=tokens_create)
-        response2 = f"Total number of entries considered: {len(entries_list)}\n" + response
+        response2 = f"Başlık Altındaki Toplam Entry Sayısı: {len(entries_list)}\n" + response
         try:   
             sentiment_result, image = sentiment_analysis(entries_list)
         except: # gives error if >= 250 entries. --> but gave an error in [-245:]?.
