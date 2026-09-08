@@ -10,13 +10,12 @@ import matplotlib.pyplot as plt
 import io
 from PIL import Image
 import os
-from typing import List, Optional, Tuple
 
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5:3b")
-OLLAMA_NUM_CTX = int(os.environ.get("OLLAMA_NUM_CTX", "16384"))
+OLLAMA_NUM_CTX = int(os.environ.get("OLLAMA_NUM_CTX", "16384")) # must fit prompt + tokens_create, or the model degrades/goes silent (see get_completion)
 
 
-def check_multi_page(url_main: str) -> Tuple[bool, int]:
+def check_multi_page(url_main: str) -> tuple[bool, int]:
     """
     Checks whether the page of the title is multi-paged (contains a page counter),
     or single-paged (does not contain a page counter). Returns a boolean, TRUE for multi-paged situations.
@@ -44,7 +43,7 @@ def check_multi_page(url_main: str) -> Tuple[bool, int]:
         print("This title only contains 1 page.")
         return False, 1 # it is single-paged.
 
-def single_page_scrape(url: str) -> List[str]:
+def single_page_scrape(url: str) -> list[str]:
     """
     Scraping all the entries from a single URL page.
 
@@ -71,7 +70,7 @@ def get_page_title(url: str) -> str:
     title = soup.find('span', itemprop='name').text # have all entries in an iterable (raw, needs further processing)
     return str(title)
 
-def all_pages_scrape(url_main: str) -> List[str]:
+def all_pages_scrape(url_main: str) -> list[str]:
     """
     Scraping all the entries from all pages.
 
@@ -101,7 +100,7 @@ def get_completion(prompt: str, tokens_create: int, model: str = OLLAMA_MODEL) -
 
 
     messages = [{"role": "user", "content": prompt}]
-    print(messages)
+    #print(messages)
 
     response = ollama.chat(
         model=model,
@@ -112,7 +111,7 @@ def get_completion(prompt: str, tokens_create: int, model: str = OLLAMA_MODEL) -
             "num_ctx": OLLAMA_NUM_CTX # prompt + output must fit within this, or Ollama silently truncates
         }
     )
-    print(response)
+    #print(response)
     return response["message"]["content"]
 
 def create_pie_chart(positives: int, neutrals: int, negatives: int) -> Image.Image:
@@ -141,7 +140,7 @@ def create_pie_chart(positives: int, neutrals: int, negatives: int) -> Image.Ima
     return image
 
 # https://huggingface.co/VRLLab/TurkishBERTweet
-def sentiment_analysis(entries_list: List[str]) -> Tuple[str, Image.Image]:
+def sentiment_analysis(entries_list: list[str]) -> tuple[str, Image.Image]:
     """
     Runs sentiment analysis on a list of posts using the TurkishBERTweet
     sentiment classifier, then tallies the results into a pie chart.
@@ -174,7 +173,7 @@ def sentiment_analysis(entries_list: List[str]) -> Tuple[str, Image.Image]:
     image = create_pie_chart(counter_list['positive'], counter_list['neutral'], counter_list['negative'])
     return result, image
 
-def getSummary(url_main: str, tokens_create: int, sentiment: bool, lang: str = "English") -> Tuple[str, str, Optional[Image.Image]]:
+def getSummary(url_main: str, tokens_create: int, sentiment: bool) -> tuple[str, str, Image.Image | None]:
     """
     Scrapes all entries for a EksiSozluk title and generates an AI summary,
     optionally including sentiment analysis over the scraped posts.
@@ -188,21 +187,8 @@ def getSummary(url_main: str, tokens_create: int, sentiment: bool, lang: str = "
     entries_list = all_pages_scrape(url_main)
     
     print(f"Generating the summary...\n")
-    prompt_old =  f"""
-    You are going to be a presented a list of strings below. Each string in the list is in Turkish. \
-    These strings are scraped from a Turkish forum that resembles Reddit, called Ekşi Sözlük. \
-    Each string in the list represents a post, under a specified title. The list of strings will be specified under single quotations. \
-    The title representing the topic of the posts will also be given below as well (under single quotations). \
-    Summarize what is being said in these posts overall, for someone who does not know anything neither about the posts nor the title. \
-    Write the summary in {lang}. Use bullet points for better clarity. Do not have incomplete sentence(s) in the output! Do not repeat yourself!
-    
-    Title: '{url_title}'   
-    
-    List of strings (posts): '{entries_list}'
-    
-    """
 
-    prompt =  f"""
+    prompt_old =  f"""
     Aşağıda bir dizi metin sunulacak. Listedeki her bir metin Türkçe olup, Türkçe bir forum olan Ekşi Sözlük'ten alınmıştır. \
     Listedeki her bir metin, belirli bir başlık altında yapılmış bir paylaşımı temsil etmektedir.
     Metin listesi tek tırnak işaretleri arasında verilecektir. \
@@ -218,14 +204,33 @@ def getSummary(url_main: str, tokens_create: int, sentiment: bool, lang: str = "
     
     """
 
+    prompt =  f"""
+    You are going to be a presented a list of strings below. Each string in the list is in Turkish. \
+    These strings are scraped from a Turkish forum that resembles Reddit, called Ekşi Sözlük. \
+    Each string in the list represents a post, under a specified title. The list of strings will be specified under single quotations. \
+    The title representing the topic of the posts will also be given below as well (under single quotations). \
+    Summarize what is being said in these posts overall, for someone who does not know anything neither about the posts nor the title. \
+    Write the summary in English. Use bullet points for better clarity. Please do not have incomplete sentence(s) in the output.
+    
+    Title: '{url_title}'   
+    
+    List of strings (posts): '{entries_list}'
+    
+    """
+    
+
+
+
+
+
 
     if(sentiment==False):
         response = get_completion(prompt=prompt, tokens_create=tokens_create)
-        response2 = f"Başlık Altındaki Toplam Entry Sayısı: {len(entries_list)}\n" + response 
+        response2 = f"Total Number of Entries: {len(entries_list)}\n" + response 
         return response2, "--", None
     else:
         response = get_completion(prompt=prompt, tokens_create=tokens_create)
-        response2 = f"Başlık Altındaki Toplam Entry Sayısı: {len(entries_list)}\n" + response
+        response2 = f"Total Number of Entries: {len(entries_list)}\n" + response
         try:   
             sentiment_result, image = sentiment_analysis(entries_list)
         except: # gives error if >= 250 entries. --> but gave an error in [-245:]?.
