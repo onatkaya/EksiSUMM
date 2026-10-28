@@ -1,5 +1,4 @@
 # EksiSUMM 💧
-### Try it at [Hugging Face Spaces 🤗](https://huggingface.co/spaces/mronatkaya/eksiSUMM)!
 
 ## Description 🧠
 **Don't have time for reading all the entries in [Eksi Sozluk](http://eksisozluk.com/)? Then, you are at the right place!**
@@ -80,7 +79,7 @@ Afterwards, you should be directed to a `localhost` address, where you can play 
 
 ## Contact
 
-For questions and inquiries, you could contact via my email `mronatkaya@gmail.com` or [LinkedIn](https://www.linkedin.com/in/onat-kaya2/)
+For questions and inquiries, you could contact via my email `mronatkaya@gmail.com` or [LinkedIn](https://www.linkedin.com/in/onat-kaya1/)
 
 ## Credits
 
